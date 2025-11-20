@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guess That Gacha</title>
+  <title>Puzzle Mini Games</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -18,33 +18,32 @@
   </nav>
 
   <main>
- <section class="container fade show start-flow" id="menu-screen" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill active">Start</button>
-      </div>
+    <section class="container fade show start-flow" id="menu-screen" data-screen>
 
       <div class="tutorial-dialog">
         <div class="dialog-icon">?</div>
         <div>
-          <h2>How Tutorials Look</h2>
-          <p class="dialog-subtext">Use this template to highlight quick tips, controls, or lore right after a breadcrumb. Keep it short and friendly so new players feel guided before selecting a game mode.</p>
+          <h2>Challenge Your Brain The FUN way!</h2>
         </div>
       </div>
 
       <div class="center-block hero">
-        <p class="eyebrow">Mini Puzzle Collection</p>
+        <p class="eyebrow">MINI PUZZLE COLLECTION</p>
         <h1>Puzzle Mini Games</h1>
         <p class="subtitle">Sharpen logic, math, and fandom trivia in one fast-paced challenge.</p>
         <button class="primary-btn" id="startBtn">Start</button>
       </div>
+      <footer class="menu-footer">
+        <div class="footer-images">
+          <img src="https://placehold.co/240x60?text=Img+1" alt="footer image 1">
+          <img src="https://placehold.co/240x60?text=Img+2" alt="footer image 2">
+          <img src="https://placehold.co/240x60?text=Img+3" alt="footer image 3">
+          <img src="https://placehold.co/240x60?text=Img+4" alt="footer image 4">
+        </div>
+      </footer>
     </section>
 
     <section class="container hidden fade start-flow" id="game-select" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill" id="breadcrumb-home">Home</button>
-        <span class="breadcrumb-divider">›</span>
-        <button class="breadcrumb-pill active">Select Game</button>
-      </div>
 
       <header class="section-header">
         <h2>Select Game</h2>
@@ -55,7 +54,7 @@
 
       <div class="suggestion-card">
         <h4>Suggestion</h4>
-        <p>Start with 5 logic questions at a 10-second timer to warm up, then push the pace to 5 seconds once you’re comfortable.</p>
+        <p>Start with 5 logic questions at a 10-second timer to warm up, then increase the pace as you get comfortable.</p>
       </div>
 
       <form id="setupForm">
@@ -63,13 +62,12 @@
           <article class="selection-card">
             <div class="card-header">
               <h3>Timer</h3>
-              <p>Hover and choose a countdown. Default is 5 seconds.</p>
+              <p>Hover and choose a countdown. Default is 10 seconds.</p>
             </div>
             <div class="pill-group" id="timerGroup">
-              <button type="button" class="pill active" data-timer="5">5s</button>
               <button type="button" class="pill" data-timer="10">10s</button>
-              <button type="button" class="pill" data-timer="15">15s</button>
               <button type="button" class="pill" data-timer="20">20s</button>
+              <button type="button" class="pill" data-timer="30">30s</button>
             </div>
           </article>
 
@@ -81,15 +79,19 @@
             <div class="card-options" id="categoryGroup">
               <button type="button" class="card-option" data-category="math">
                 <h4>Math</h4>
-                <p>Number riddles, sequences, and playful equations.</p>
+                <p>Equation and number puzzles</p>
               </button>
               <button type="button" class="card-option" data-category="logic">
                 <h4>Logic</h4>
-                <p>Critical thinking twists and pattern plays.</p>
+                <p>Brain Teasers & riddles.</p>
               </button>
               <button type="button" class="card-option" data-category="cartoon">
                 <h4>Cartoon & Anime</h4>
-                <p>Classic cartoons meet Naruto knowledge checks.</p>
+                <p>Cartoons, Naruto and more!</p>
+              </button>
+              <button type="button" class="card-option" data-category="general">
+                <h4>General Questions</h4>
+                <p>Enjoy Random facts!</p>
               </button>
             </div>
           </article>
@@ -113,9 +115,10 @@
 
     <section class="container hidden fade" id="quiz" data-screen>
       <div class="quiz-shell">
+        <div id="topFeedback" class="top-feedback" aria-hidden="true"></div>
         <header class="quiz-header">
           <div class="question-counter" id="qCounter">Question 1/1</div>
-          <div class="timer" id="timer">5s</div>
+          <div class="timer" id="timer">10s</div>
         </header>
 
         <article class="question-card">
@@ -125,18 +128,12 @@
             <button type="button" id="skipBtn" class="ghost-btn">Skip</button>
             <button type="button" id="submitBtn" class="primary-btn disabled" disabled>Submit</button>
           </div>
-          <p class="feedback" id="feedback"></p>
+          <!-- feedback paragraph removed per request (top popup handles messages) -->
         </article>
       </div>
     </section>
 
     <section class="container hidden fade" id="result-screen" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill" id="result-home">Home</button>
-        <span class="breadcrumb-divider">›</span>
-        <button class="breadcrumb-pill active">Results</button>
-        <button class="breadcrumb-pill try-again" id="tryAgainBtn">Try Again</button>
-      </div>
 
       <header class="section-header">
         <h2>Game Complete</h2>
@@ -147,17 +144,11 @@
       <div id="achievementList" class="achievement-grid"></div>
 
       <div class="result-actions">
-        <button class="ghost-btn" id="viewSetupBtn">Adjust Setup</button>
         <button class="primary-btn" id="playAgainBtn">Play Again</button>
       </div>
     </section>
 
     <section class="container hidden fade" id="behind" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill" id="behind-home">Home</button>
-        <span class="breadcrumb-divider">›</span>
-        <button class="breadcrumb-pill active">Behind the Codes</button>
-      </div>
       <header class="section-header">
         <h2>Behind the Codes</h2>
         <p class="section-subtext">Use this template to document how each screen was crafted.</p>
@@ -188,11 +179,6 @@
     </section>
 
     <section class="container hidden fade" id="team" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill" id="team-home">Home</button>
-        <span class="breadcrumb-divider">›</span>
-        <button class="breadcrumb-pill active">The Team</button>
-      </div>
       <header class="section-header">
         <h2>The Team</h2>
         <p class="section-subtext">Introduce your trio with quick bios. Drop your own image URLs and copy over these fields.</p>
@@ -201,18 +187,33 @@
       <div class="team-grid">
         <article class="profile-card">
           <img src="https://placehold.co/320x320?text=Profile+1" alt="Profile placeholder 1">
+          <code>https://your-profile-image-1.jpg</code>
           <h3>Alex Rivera</h3>
           <p>Front-end lead who shapes every screen flow and animation.</p>
+          <div class="social-links">
+            <a href="#" target="_blank">Twitter</a>
+            <a href="#" target="_blank">LinkedIn</a>
+          </div>
         </article>
         <article class="profile-card">
           <img src="https://placehold.co/320x320?text=Profile+2" alt="Profile placeholder 2">
+          <code>https://your-profile-image-2.jpg</code>
           <h3>Bianca Cruz</h3>
           <p>Experience strategist documenting tutorials, tone, and copy beats.</p>
+          <div class="social-links">
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">Portfolio</a>
+          </div>
         </article>
         <article class="profile-card">
           <img src="https://placehold.co/320x320?text=Profile+3" alt="Profile placeholder 3">
+          <code>https://your-profile-image-3.jpg</code>
           <h3>Carlo Reyes</h3>
           <p>Full-stack tinkerer ensuring every quiz logic edge case feels smooth.</p>
+          <div class="social-links">
+            <a href="#" target="_blank">GitHub</a>
+            <a href="#" target="_blank">Twitter</a>
+          </div>
         </article>
       </div>
 
@@ -230,44 +231,21 @@
     </section>
 
     <section class="container hidden fade" id="contact" data-screen>
-      <div class="breadcrumb-row">
-        <button class="breadcrumb-pill" id="contact-home">Home</button>
-        <span class="breadcrumb-divider">›</span>
-        <button class="breadcrumb-pill active">Contact Us</button>
-      </div>
-
       <header class="section-header">
         <h2>Contact Us</h2>
-        <p class="section-subtext">Same story as our About section—just with direct ways to reach the crew.</p>
+        <p class="section-subtext">Reach out anytime — we read every message.</p>
       </header>
 
       <div class="contact-shell">
         <article class="contact-card">
           <div class="about-content">
-            <h3>About Us</h3>
-            <p>Guess That Gacha is a compact puzzle lab crafted by a small but obsessive crew of builders. We mix math drills, logic twists, and fandom trivia to keep every round quick, punchy, and replayable.</p>
-          </div>
-          <ul class="about-list">
-            <li>📌 Built for classroom showcases and friendly competitions.</li>
-            <li>⚙️ Modular quiz engine so new categories drop in fast.</li>
-            <li>💬 Player-first UX with playful copy and prompt feedback.</li>
-          </ul>
-        </article>
-
-        <article class="contact-card">
-          <div class="about-content">
             <h4>Reach Out Anytime</h4>
-            <p>Guess That Gacha is a compact puzzle lab crafted by a small but obsessive crew of builders. We mix math drills, logic twists, and fandom trivia to keep every round quick, punchy, and replayable.</p>
+            <p>We’re available for feedback, collabs, and questions. Use the details below or send a message through your preferred social channel.</p>
           </div>
-          <ul class="about-list">
-            <li>📌 Built for classroom showcases and friendly competitions.</li>
-            <li>⚙️ Modular quiz engine so new categories drop in fast.</li>
-            <li>💬 Player-first UX with playful copy and prompt feedback.</li>
-          </ul>
           <ul class="contact-info">
             <li>
-              <span>Details</span>
-              Guess That Gacha is a compact puzzle lab crafted by a small but obsessive crew of builders. We mix math drills, logic twists, and fandom trivia to keep every round quick, punchy, and replayable.
+              <span>Email</span>
+              hello@example.com
             </li>
             <li>
               <span>Contact No.</span>
