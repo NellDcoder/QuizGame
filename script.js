@@ -25,8 +25,7 @@ const elements = {
     question: document.getElementById('question'),
     choices: document.getElementById('choices'),
     feedback: document.getElementById('feedback'),
-    submitBtn: document.getElementById('submitBtn'),
-    skipBtn: document.getElementById('skipBtn')
+    submitBtn: document.getElementById('submitBtn')
   },
   result: {
     screen: document.getElementById('result-screen'),
@@ -156,9 +155,75 @@ function handleNavClicks() {
   Object.entries(navMap).forEach(([btnId, screenId]) => {
     const btn = document.getElementById(btnId);
     if (btn) {
-      btn.addEventListener('click', () => showScreen(screenId));
+      btn.addEventListener('click', () => {
+        showScreen(screenId);
+        
+        const nav = document.querySelector('.nav');
+        if (nav.classList.contains('open')) {
+          nav.classList.remove('open');
+        }
+      });
     }
   });
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+      const nav = document.querySelector('.nav');
+      nav.classList.toggle('open');
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const nav = document.querySelector('.nav');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    if (!nav.contains(e.target) && !mobileMenuBtn.contains(e.target) && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+    }
+  });
+}
+
+function handleChangelogs() {
+  const changelogsBtn = document.getElementById('changelogsBtn');
+  const closeBtn = document.getElementById('closeChangelogs');
+  const overlay = document.getElementById('changelogsOverlay');
+
+  if (changelogsBtn) {
+    changelogsBtn.addEventListener('click', () => {
+      const currentScreen = document.querySelector('[data-screen]:not(.hidden)');
+      if (currentScreen && currentScreen.id === 'menu-screen') {
+        showChangelogsOverlay();
+      }
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideChangelogsOverlay);
+  }
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        hideChangelogsOverlay();
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay && !overlay.classList.contains('hidden')) {
+      hideChangelogsOverlay();
+    }
+  });
+}
+
+function showChangelogsOverlay() {
+  const overlay = document.getElementById('changelogsOverlay');
+  if (overlay) {
+    overlay.classList.remove('hidden');
+  }
+}
+
+function hideChangelogsOverlay() {
+  const overlay = document.getElementById('changelogsOverlay');
+  if (overlay) {
+    overlay.classList.add('hidden');
+  }
 }
 
 
@@ -242,7 +307,6 @@ function renderQuestion() {
   elements.quiz.submitBtn.textContent = 'Submit';
   elements.quiz.submitBtn.disabled = true;
   elements.quiz.submitBtn.classList.add('disabled');
-  elements.quiz.skipBtn.disabled = false;
 
   const tf = document.getElementById('topFeedback');
   if (tf) { tf.className = 'top-feedback'; tf.setAttribute('aria-hidden', 'true'); }
@@ -316,13 +380,12 @@ function handleTimeExpired() {
   if (elements.quiz.feedback) { elements.quiz.feedback.textContent = msg; elements.quiz.feedback.classList.add('wrong'); }
   highlightCorrect(current.answer);
   showTopFeedback(msg, 'wrong');
-  elements.quiz.skipBtn.disabled = true;
   elements.quiz.submitBtn.disabled = true;
   elements.quiz.submitBtn.classList.add('disabled');
   clearTimeout(quizState.autoAdvanceTimer);
   quizState.autoAdvanceTimer = setTimeout(() => {
     nextStep();
-  }, 3000);
+  }, 2500);
 }
 
 function lockChoices() {
@@ -330,7 +393,6 @@ function lockChoices() {
     choice.classList.add('disabled');
   });
 }
-
 elements.quiz.submitBtn.addEventListener('click', () => {
   const text = (elements.quiz.submitBtn.textContent || '').toLowerCase();
   const isNext = text.includes('next');
@@ -342,23 +404,6 @@ elements.quiz.submitBtn.addEventListener('click', () => {
     evaluateAnswer();
   }
 });
-elements.quiz.skipBtn.addEventListener('click', () => {
-  quizState.skipped += 1;
-  clearInterval(quizState.timerId);
-  if (elements.quiz.feedback) { elements.quiz.feedback.textContent = 'Skipped!'; elements.quiz.feedback.classList.remove('wrong', 'correct'); elements.quiz.feedback.classList.add('wrong'); }
-  quizState.awaitingAnswer = false;
-  lockChoices();
-  const current = quizState.questions[quizState.currentIndex];
-  const msg = `Wrong! Correct answer: ${current.answer}`;
-  highlightCorrect(current.answer);
-  showTopFeedback(msg, 'wrong');
-  elements.quiz.submitBtn.textContent = 'Next Question';
-  elements.quiz.submitBtn.disabled = false;
-  elements.quiz.submitBtn.classList.remove('disabled');
-  elements.quiz.skipBtn.disabled = true;
-  clearTimeout(quizState.autoAdvanceTimer);
-});
-
 function evaluateAnswer() {
   if (!quizState.selectedChoice) return;
   const current = quizState.questions[quizState.currentIndex];
@@ -368,6 +413,7 @@ function evaluateAnswer() {
   const correct = quizState.selectedChoice === current.answer;
   if (correct) {
     quizState.score += 1;
+    playCorrectConfetti();
     if (quizState.timeLeft > setupState.timer / 2) {
       quizState.fastAnswers += 1;
     }
@@ -378,15 +424,15 @@ function evaluateAnswer() {
   } else {
     if (elements.quiz.feedback) { elements.quiz.feedback.textContent = `Wrong! Correct answer: ${current.answer}`; elements.quiz.feedback.classList.add('wrong'); }
     highlightCorrect(current.answer);
+    playWrongEffects();
     showTopFeedback(`Wrong! Correct answer: ${current.answer}`, 'wrong');
   }
-  elements.quiz.skipBtn.disabled = true;
   elements.quiz.submitBtn.disabled = true;
   elements.quiz.submitBtn.classList.add('disabled');
   clearTimeout(quizState.autoAdvanceTimer);
   quizState.autoAdvanceTimer = setTimeout(() => {
     nextStep();
-  }, 3000);
+  }, 2500);
 }
 function highlightCorrect(answerText) {
   const choices = elements.quiz.choices.querySelectorAll('.choice');
@@ -467,10 +513,12 @@ function renderAchievements() {
   if (out.length === 0) {
     earnedKeys.forEach((k) => { if (templates[k]) out.push(templates[k]); });
   }
-
-  elements.result.achievements.innerHTML = out.map(
-    (item) => `<article class="achievement-card"><h4>${item.title}</h4><p>${item.desc}</p></article>`
-  ).join('');
+  if (out.length > 0) {
+    const achievement = out[0];
+    elements.result.achievements.innerHTML = `<article class="achievement-card"><h4>${achievement.title}</h4><p>${achievement.desc}</p></article>`;
+  } else {
+    elements.result.achievements.innerHTML = '';
+  }
 }
 function attachResultHandlers() {
   if (elements.result.tryAgain) {
@@ -482,6 +530,7 @@ function attachResultHandlers() {
 }
 function initialize() {
   handleNavClicks();
+  handleChangelogs();
   attachSelectionHandlers();
   attachResultHandlers();
   validateLaunch();
@@ -490,3 +539,32 @@ function initialize() {
   if (timerPill) setActiveState(elements.timerGroup, timerPill);
 }
 document.addEventListener('DOMContentLoaded', initialize);
+function playCorrectConfetti() {
+  confetti({
+    particleCount: 120,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+}
+
+function playWrongEffects() {
+  const screen = document.getElementById('quiz');
+  if (!screen) return;
+
+  screen.classList.add('shake', 'wrong-flash');
+
+  setTimeout(() => {
+    screen.classList.remove('shake', 'wrong-flash');
+  }, 600);
+}
+
+function playSkipFlash() {
+  const screen = document.getElementById('quiz');
+  if (!screen) return;
+
+  screen.classList.add('skip-flash');
+
+  setTimeout(() => {
+    screen.classList.remove('skip-flash');
+  }, 500);
+}
