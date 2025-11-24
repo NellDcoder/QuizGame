@@ -1,22 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Puzzle Mini Games</title>
+  <title>Quiz Game v.4.0.0(stable)</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
 <body>
   <div class="blur-bg"></div>
-
   <nav class="nav">
     <button id="nav-home">Home</button>
     <button id="nav-behind">Behind the Codes</button>
     <button id="nav-team">About Us</button>
     <button id="nav-contact">Contact Us</button>
+    <button class="mobile-menu" id="mobile-menu-btn">☰</button>
   </nav>
-
   <main>
     <section class="container fade show start-flow" id="menu-screen" data-screen>
 
@@ -29,11 +27,14 @@
 
       <div class="center-block hero">
         <p class="eyebrow">MINI PUZZLE COLLECTION</p>
-        <h1>Puzzle Mini Games</h1>
+        <h1>Quiz Game</h1>
         <p class="subtitle">Sharpen logic, math, and fandom trivia in one fast-paced challenge.</p>
-        <button class="primary-btn" id="startBtn">Start</button>
+        <div class="hero-actions">
+          <button class="primary-btn" id="startBtn">Start</button>
+          <button class="ghost-btn" id="changelogsBtn">View Changelogs</button>
+        </div>
       </div>
-      <h2>Mini Game Overview:</h2>
+      <h2>Puzzle Mini Game Overview:</h2>
       <footer class="menu-footer">
         <div class="footer-images">
           <img src="1.png" alt="footer image 1">
@@ -43,14 +44,62 @@
         </div>
       </footer>
     </section>
+    <div id="changelogsOverlay" class="changelogs-overlay hidden">
+      <div class="changelogs-content">
+        <div class="changelogs-header">
+          <h2>Changelogs</h2>
+          <button id="closeChangelogs" class="close-btn">&times;</button>
+        </div>
+        <div class="changelogs-body">
+          <div class="changelog-entry">
+            <h3>Version 4.0 - Latest Updates</h3>
+            <ul>
+              <li>REMOVED "Submit" and "Next Question" Button. Quizzes now proceeds 2.5secs(Original: 3seconds) per question</li>
+              <li>Enhanced visual effects and animations</li>
+              <li>Improved user interface design</li>
+              <li>Website Main title correction; Puzzle Mini Game > Quiz Game</li>
+              <li>Implemented confetti/transition effects</li>
+              <li>Bug fixes and performance improvements</li>
+              <li>Fix Mobile compatibility </li>
+            </ul>
+          </div>
+          <div class="changelog-entry">
+            <h3>Version 3.1.0</h3>
+            <ul>
+              <li>Added Image in the footer section (Mini game preview)</li>
+              <li>Slight Changes to the code</li>
+              <li>Changed "About Us" Section Content</li>
+              <li>Changed "Contact Us" Section Content Future updates are subject to be released via 4.0 in the future</li>
+            </ul>
+          </div>
+          <div class="changelog-entry">
+            <h3>Version 3.0.0</h3>
+            <ul>
+              <li>Added "General Questions" to the Quiz Category</li>
+              <li>Improved Timer and Question answer message during Questions</li>
+              <li>Edited main title to "Quiz Game"</li>
+              <li>Remove Mobile compatibility</li>
+              <li>Change color of button hovers</li>
+            </ul>
+          </div>
+          <div class="changelog-entry">
+            <h3>Version 1.0.0</h3>
+            <ul>
+              <li>Added Section 'About Us, Contact us'</li>
+              <li></li>
+              <li>New question types and categories</li>
+              <li>Improved scoring system</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <section class="container hidden fade start-flow" id="game-select" data-screen>
 
       <header class="section-header">
         <h2>Select Game</h2>
-        <p class="section-subtext">Tweak your settings before you drop into the quiz arena.</p>
       </header>
-
       <p class="instructions">Set Timer, Choose Quiz Category and Total Questions To Start The Game</p>
 
       <div class="suggestion-card">
@@ -75,7 +124,7 @@
           <article class="selection-card">
             <div class="card-header">
               <h3>Quiz Category</h3>
-              <p>Pick the vibe you want to battle.</p>
+              <p>Select a category of your choice</p>
             </div>
             <div class="card-options" id="categoryGroup">
               <button type="button" class="card-option" data-category="math">
@@ -100,7 +149,7 @@
           <article class="selection-card full-width">
             <div class="card-header">
               <h3>Total Questions</h3>
-              <p>Choose your number of questionnaires here:</p>
+              <p>Choose total questions here:</p>
             </div>
             <div class="pill-group" id="questionGroup">
               <button type="button" class="pill" data-total="3">3</button>
@@ -113,6 +162,7 @@
         <button type="submit" id="launchQuizBtn" class="primary-btn disabled" disabled>Launch Quiz</button>
       </form>
     </section>
+
     <section class="container hidden fade" id="quiz" data-screen>
       <div class="quiz-shell">
         <div id="topFeedback" class="top-feedback" aria-hidden="true"></div>
@@ -120,13 +170,14 @@
           <div class="question-counter" id="qCounter">Question 1/1</div>
           <div class="timer" id="timer">10s</div>
         </header>
+
         <article class="question-card">
           <h2 id="question">Question text will appear here.</h2>
           <div id="choices" class="choices"></div>
           <div class="quiz-actions">
-            <button type="button" id="skipBtn" class="ghost-btn">Skip</button>
             <button type="button" id="submitBtn" class="primary-btn disabled" disabled>Submit</button>
           </div>
+          
         </article>
       </div>
     </section>
@@ -135,7 +186,7 @@
 
       <header class="section-header">
         <h2>Game Complete</h2>
-        <p class="section-subtext">Great run! Here’s how you performed.</p>
+        <p class="section-subtext">Good Job! Here's the results.</p>
       </header>
 
       <p id="scoreText" class="score-callout"></p>
@@ -149,78 +200,170 @@
     <section class="container hidden fade" id="behind" data-screen>
       <header class="section-header">
         <h2>Behind the Codes</h2>
-        <p class="section-subtext">Use this template to document how each screen was crafted.</p>
+        <p class="section-subtext">Website Progress from 1.0 to 4.0</p>
       </header>
-
-      <div class="howto-grid">
-        <article class="howto-card">
-          <img src="https://placehold.co/600x360?text=Upload+Wireframe" alt="Placeholder for process imagery">
-          <div class="howto-body">
-            <h3>Step Heading</h3>
-            <p>Describe the goal of this step. Reference layout choices, components, or interactions you built.</p>
-            <div class="image-template">
-              <span>Image Link URL</span>
-              <code>https://your-image-link-here.jpg</code>
+      <div class="comparison-tiles">
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Start Menu v1.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="Startmenu1.0.png" alt="Start menu v1.0">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Start Menu v2.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="Startmenu2.0.png" alt="Start menu v2.0">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Start Menu v3.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="Startmenu3.0.png" alt="Start menu v3.0">
             </div>
           </div>
         </article>
-        <article class="howto-card">
-          <img src="https://placehold.co/600x360?text=Drop+Code+Snippets" alt="Placeholder for code breakdown">
-          <div class="howto-body">
-            <h3>Subtext / Notes</h3>
-            <p>Share tips, snippets, or tricky parts you solved so teammates can follow the same path.</p>
-            <button class="link-chip" type="button">Add Documentation Link</button>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Game Section v1.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Inconsistent" alt="Before design system">
+            </div>
           </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Game Section v2.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+UI" alt="Before UI">
+            </div>
+          </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Game Section v3.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Desktop+Only" alt="Before mobile">
+            </div>
+          </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Question and Answer page v1.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+Categories" alt="Before categories">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Question and Answer page v2.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Simple+Score" alt="Before scoring">
+            </div>
+          </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz and Answer page v3.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=No+Effects" alt="Before effects">
+            </div>
+          </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Results v1.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+Feedback" alt="Before feedback">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Results v2.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Simple+DB" alt="Before database">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">Quiz Results v3.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+Access" alt="Before accessibility">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">About Us V1.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Simple+DB" alt="Before database">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">About Us V2.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+Access" alt="Before accessibility">
+            </div>
+        </article>
+        <article class="comparison-tile">
+          <h3 class="tile-heading">About Us V3.0</h3>
+          <div class="image-comparison">
+            <div class="comparison-item">
+              <img src="https://placehold.co/300x200/cccccc/666666?text=Basic+Access" alt="Before accessibility">
+            </div>
         </article>
       </div>
     </section>
 
     <section class="container hidden fade" id="team" data-screen>
       <header class="section-header">
-        <h2>The Mini Game Team!</h2>
-        <p class="section-subtext">We are a trio group members of BMMA students who made a simple mini game website  for their final Web Programming Project</p>
+        <h2>The Artist Coders</h2>
+        <p class="section-subtext">We are a trio group members of BMMA students who made a simple mini game website for their final Web Programming Project
+        </p>
       </header>
+
       <div class="team-grid">
         <article class="profile-card">
-          <img src="https://scontent.fmnl37-1.fna.fbcdn.net/v/t39.30808-6/481666120_1716382412281622_2951351464497870756_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=86c6b0&_nc_eui2=AeHO3bsWtG44jgC7JslYijcFcRyQgp3r_bFxHJCCnev9sbrC3iMYzHd8pAf10ifi7Sg2qWtXN3QU8MBYEBQBUpjm&_nc_ohc=sFQKWPs48t0Q7kNvwFeNv-v&_nc_oc=Adkv4uybhYZ_GdPApF5cpQqZTMhnJwY2FBzLu3rIdOfOhaPv-7u1lhz21PDxw2k8bRfRliR9EwExytXDcpZFPBr8&_nc_zt=23&_nc_ht=scontent.fmnl37-1.fna&_nc_gid=SsYGRAqWGMPoycVg0APepA&oh=00_AfjAKUcBl4VNrAVeh_ROlVYIg6MzMapJBeSsXOOQGnchrw&oe=6928E2C0" alt="Profile placeholder 1">
+          <img src="Allen.jpg" alt="Profile1">
           <h3>Allen Salvador</h3>
-          <p>Web Developer</p>
+          <p>UI Developer</p>
           <div class="social-links">
-            <a href="https://www.facebook.com/profile.php?id=61577246112660" target="_blank">FaceBook</a>
-            <a href="#" target="_blank">Ms Teams</a>
+            <a href="https://www.facebook.com/profile.php?id=61577246112660" target="_blank">Facebook</a>
           </div>
         </article>
         <article class="profile-card">
-          <img src="https://scontent.fmnl3-4.fna.fbcdn.net/v/t39.30808-6/480935441_1169334031330465_7704453978118098958_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHT6ffaTHqIUhYoGb4WZH9H81IOgRDUQqLzUg6BENRConUOSTBCiIErs3KSFklYUYaob6DoVILUFelhOwUjPhHp&_nc_ohc=QB-XMRKjl-UQ7kNvwH2QZpP&_nc_oc=Adnwp3MC8cTB_4w8iY47BVmRJhbJTX4_p4vsFmPESczX7fO9U7dQrfqygPO8hV1FCUiJJdgP1bhrjEsBx_VYV_11&_nc_zt=23&_nc_ht=scontent.fmnl3-4.fna&_nc_gid=IcxXai8TYCG8aVt8BwBICA&oh=00_AfjHQ8PMKVBQmH-2N7nrbjVXoOFiUaZ-MtrXRPVL8iUZTA&oe=6928F2BE" alt="Profile placeholder 2">
+          <img src="Klerq.jpg" alt="Profile placeholder 2">
           <h3>Mhionne Klerq Dionisio</h3>
           <p>UI/UX Designer</p>
           <div class="social-links">
-            <a href="#" target="_blank">FaceBook</a>
-            <a href="#" target="_blank">Portfolio</a>
+            <a href="https://www.facebook.com/profile.php?id=61572543825525" target="_blank">Facebook</a>
           </div>
         </article>
         <article class="profile-card">
-          <img src="https://placehold.co/320x320?text=Profile+3" alt="Profile placeholder 3">
+          <img src="Jim.jpg" alt="Profile placeholder 3">
           <h3>Jim Hendrix Mendoza</h3>
-          <p>Full-stack tinkerer ensuring every quiz logic edge case feels smooth.</p>
+          <p>UX Engineer</p>
           <div class="social-links">
-            <a href="#" target="_blank">GitHub</a>
-            <a href="#" target="_blank">Twitter</a>
+            <a href="https://jimhendrix51.wixsite.com/jim-hendrix-mendoza" target="_blank">Portfolio</a>
           </div>
         </article>
       </div>
+
       <div class="about-us">
         <div class="about-content">
           <h3>About Us</h3>
-          <p>Guess That Gacha is a compact puzzle lab crafted by a small but obsessive crew of builders. We mix math drills, logic twists, and fandom trivia to keep every round quick, punchy, and replayable.</p>
+          <p>Quiz Game is a educational based question and answer system created by group of 3 Multi-Media Arts students. Applying Math, Logic, Cartoon & Anime and general trivias that lets users engaged. This project was created for Finals Web programming project and we use what we've learned in typography and layout designs, and specifically for webprogramming.  </p>
         </div>
         <ul class="about-list">
-          <li>📌 Built for your brain exercises</li>
-          <li>⚙️ Minimalist and familiar interface</li>
-          <li>💬 User friendly and simple questions</li>
+          <li>📌 Made for Brain exercises and engaging questionnaires.</li>
+          <li>⚙️ User friendly and easy to navigate</li>
+          <li>💬 Open for feedbacks and suggestions</li>
         </ul>
       </div>
     </section>
+
     <section class="container hidden fade" id="contact" data-screen>
       <header class="section-header">
         <h2>Contact Us</h2>
@@ -231,23 +374,23 @@
         <article class="contact-card">
           <div class="about-content">
             <h4>Reach Out Anytime</h4>
-            <p>This mini game website was only build for educational purposes. Still we are open for suggestions.</p>
+            <p>This mini game website was build for educational purposes only. Still we are open for suggestions.</p>
           </div>
           <ul class="contact-info">
             <li>
               <span>Email</span>
-              wonderquizhub39@gmail.com
+              Quizzapgame@gmail.com
             </li>
             <li>
               <span>Contact No.</span>
-              (+63) 932 447 3258
+              (+63) 917 992 4421
             </li>
             <li>
               <span>Social Medias</span>
               <div class="social-links">
-                <a href="https://facebook.com/GuessThatGacha" target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a href="https://instagram.com/GuessThatGacha" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://twitter.com/GuessThatGacha" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <a href="https://www.youtube.com/watch?v=WljxrzKFZ-o" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a href="https://www.youtube.com/watch?v=WljxrzKFZ-o" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/watch?v=WljxrzKFZ-o" target="_blank" rel="noopener noreferrer">Twitter</a>
               </div>
             </li>
           </ul>
@@ -255,5 +398,7 @@
       </div>
     </section>
   </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
